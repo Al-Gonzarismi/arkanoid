@@ -26,45 +26,45 @@ import java.util.Set;
  * @author victor
  */
 public class GameLogic {
+
     // CONSTANTES DEL JUEGO
     public static final int NUM_VIDAS = 3;
     // añade las constantes que estimes oportuno.
-    
+
     private int vidas;
     private int puntos;
-    
-    /** Lista de todos los objetos del juego, para dibujar, automover y eliminar */
+
+    /**
+     * Lista de todos los objetos del juego, para dibujar, automover y eliminar
+     */
     private List<Dibujable> listaObjetosDibujables;
-   
+    List<Dibujable> listaLadrillos;
     // --- Los objetos de los que quieras tener una referencia
     Breakout breakout;
     Pelota pelota;
     Ladrillo ladrillo;
-    List<Ladrillo> listaLadrillos;
+    
     // TODO Añadir la pelota, una colección con los ladrillos, etc..
     boolean espacio = false;
 
     public GameLogic() {
         listaObjetosDibujables = new LinkedList<>();
+        listaLadrillos = new LinkedList<>();
         empezar();
     }
+
     /**
      * Invocado en cada fotograma desde el frame
-     * @param g 
+     *
+     * @param g
      */
-    public void dibujarYActualizarTodo(Graphics g) {    
+    public void dibujarYActualizarTodo(Graphics g) {
         Iterator<Dibujable> iter = listaObjetosDibujables.iterator();
         while (true) {
             if (!iter.hasNext()) { // Si no hay siguiente, salir del bucle
                 break;
             }
             Dibujable objetoDelJuego = iter.next(); // Acceder al objeto
-            if (objetoDelJuego instanceof Ladrillo) {
-                List<Ladrillo> l = (List<Ladrillo>) objetoDelJuego;
-                for (Ladrillo ladri : l) {
-                    ladri.dibujar(g);
-                }
-            }
             if (objetoDelJuego instanceof Eliminable) { // Si está eliminado lo quitamos
                 if (((Eliminable) objetoDelJuego).estaEliminado()) {
                     iter.remove();
@@ -81,12 +81,13 @@ public class GameLogic {
                     ((Animable) objetoDelJuego).mover();
                 }
             }
-        } 
+        }
     }
-    
+
     /**
      * Invocado en cada fotograma desde el frame
-     * @param teclas 
+     *
+     * @param teclas
      */
     public void gestionarTeclas(Set<Integer> teclas) {
         if (teclas.contains(KeyEvent.VK_LEFT)) {
@@ -94,7 +95,7 @@ public class GameLogic {
             if (!espacio) {
                 pelota.moverIzquierda();
             }
-            
+
         } else if (teclas.contains(KeyEvent.VK_RIGHT)) {
             breakout.moverDerecha();
             if (!espacio) {
@@ -104,19 +105,19 @@ public class GameLogic {
             espacio = true;
             pelota.mover();
         }
-        
+
     }
 
     public List<Dibujable> getListaObjetos() {
         return listaObjetosDibujables;
     }
-    
+
     public void empezar() {
         // TO-DO Inicia el juego!
         listaObjetosDibujables.clear();
         inicializarNivel(0);
     }
-    
+
     public void inicializarNivel(int nivel) {
         // TO-DO
         if (nivel == 0) {
@@ -130,14 +131,60 @@ public class GameLogic {
             listaObjetosDibujables.add(breakout);
             pelota = new Pelota(this);
             listaObjetosDibujables.add(pelota);// inyección de dependencias
-            ladrillo = new Ladrillo(this);
-            listaLadrillos = ladrillo.getListaLadrillos();
-            listaObjetosDibujables.add((Dibujable) listaLadrillos);
+            int x;
+            int y;
+            int numeroSkin = 0;
+            int cantidad = 0;
+            int filas = 0;
+            String[][] m = MapaNivel.mapa;
+            for (int j = 0; j < m[nivel].length; j++) {
+                String f = m[nivel][j];
+                for (int k = 0; k < f.length(); k++) {
+                    char c = f.charAt(k);
+                    switch (c) {
+                        case 'b':
+                            numeroSkin = 0;
+                            break;
+                        case 'c':
+                            numeroSkin = 1;
+                            break;
+                        case 'g':
+                            numeroSkin = 2;
+                            break;
+                        case 'm':
+                            numeroSkin = 3;
+                            break;
+                        case 'o':
+                            numeroSkin = 4;
+                            break;
+                        case 'r':
+                            numeroSkin = 5;
+                            break;
+                        case 'y':
+                            numeroSkin = 6;
+                            break;
+                        case 'h':
+                            numeroSkin = 7;
+                            break;
+                        default:
+                            break;
+                    }
+                    if (cantidad > 7) {
+                        cantidad = 0;
+                        filas++;
+                    }
+                    x = (20 + (60 * cantidad));
+                    y = (60 + (22 * filas));
+                    cantidad++;
+                    ladrillo = new Ladrillo(this, x, y, numeroSkin);
+                    listaLadrillos.add(ladrillo);
+                }
+            }
+            listaObjetosDibujables.addAll(listaLadrillos);// inyección de dependencias
             // TODO 
         }
-        
+
         // TODO 
-        
     }
 
     public int getVidas() {
@@ -147,7 +194,5 @@ public class GameLogic {
     public int getPuntos() {
         return puntos;
     }
-    
-    
-    
+
 }
