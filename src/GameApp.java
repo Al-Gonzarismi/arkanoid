@@ -67,7 +67,7 @@ public class GameApp extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Arkanoid");
         setName("gameFrame"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(500, 650));
+        setPreferredSize(new java.awt.Dimension(520, 650));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
