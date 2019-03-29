@@ -8,7 +8,9 @@ package logic;
 import audio.StdSound;
 import figuras.Breakout;
 import figuras.Fondo;
+import figuras.Ladrillo;
 import figuras.Marcador;
+import figuras.Pelota;
 import figuras.base.Animable;
 import figuras.base.Dibujable;
 import figuras.base.Eliminable;
@@ -36,8 +38,11 @@ public class GameLogic {
    
     // --- Los objetos de los que quieras tener una referencia
     Breakout breakout;
+    Pelota pelota;
+    Ladrillo ladrillo;
+    List<Ladrillo> listaLadrillos;
     // TODO Añadir la pelota, una colección con los ladrillos, etc..
-   
+    boolean espacio = false;
 
     public GameLogic() {
         listaObjetosDibujables = new LinkedList<>();
@@ -54,6 +59,12 @@ public class GameLogic {
                 break;
             }
             Dibujable objetoDelJuego = iter.next(); // Acceder al objeto
+            if (objetoDelJuego instanceof Ladrillo) {
+                List<Ladrillo> l = (List<Ladrillo>) objetoDelJuego;
+                for (Ladrillo ladri : l) {
+                    ladri.dibujar(g);
+                }
+            }
             if (objetoDelJuego instanceof Eliminable) { // Si está eliminado lo quitamos
                 if (((Eliminable) objetoDelJuego).estaEliminado()) {
                     iter.remove();
@@ -62,7 +73,13 @@ public class GameLogic {
             }
             objetoDelJuego.dibujar(g); // lo dibujamos
             if (objetoDelJuego instanceof Animable) { // Y si está auto-animado, lo movemos
-                ((Animable) objetoDelJuego).mover();
+                if (objetoDelJuego instanceof Pelota) {
+                    if (espacio) {
+                        ((Animable) objetoDelJuego).mover();
+                    }
+                } else {
+                    ((Animable) objetoDelJuego).mover();
+                }
             }
         } 
     }
@@ -74,6 +91,18 @@ public class GameLogic {
     public void gestionarTeclas(Set<Integer> teclas) {
         if (teclas.contains(KeyEvent.VK_LEFT)) {
             breakout.moverIzquierda();
+            if (!espacio) {
+                pelota.moverIzquierda();
+            }
+            
+        } else if (teclas.contains(KeyEvent.VK_RIGHT)) {
+            breakout.moverDerecha();
+            if (!espacio) {
+                pelota.moverDerecha();
+            }
+        } else if (teclas.contains(KeyEvent.VK_SPACE)) {
+            espacio = true;
+            pelota.mover();
         }
         
     }
@@ -99,6 +128,11 @@ public class GameLogic {
             listaObjetosDibujables.add(new Marcador(this)); // inyección de dependencias
             breakout = new Breakout(this); // inyección de dependencias
             listaObjetosDibujables.add(breakout);
+            pelota = new Pelota(this);
+            listaObjetosDibujables.add(pelota);// inyección de dependencias
+            ladrillo = new Ladrillo(this);
+            listaLadrillos = ladrillo.getListaLadrillos();
+            listaObjetosDibujables.add((Dibujable) listaLadrillos);
             // TODO 
         }
         
