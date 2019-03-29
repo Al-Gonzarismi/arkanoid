@@ -54,7 +54,7 @@ public class Pelota extends Sprite implements Animable {
         }
         if (getX() < 20 || getX() > 480) {
             increX = -increX;
-        } else if (getY() < 50) {
+        } else if (getY() < 61) {
             increY = -increY;
         }
     }
