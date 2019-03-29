@@ -5,8 +5,10 @@
  */
 package figuras;
 
+import figuras.base.Dibujable;
 import figuras.base.Eliminable;
 import figuras.base.Sprite;
+import java.awt.Rectangle;
 import logic.*;
 import java.util.*;
 /**
@@ -14,8 +16,11 @@ import java.util.*;
  * @author Usuario
  */
 public class Ladrillo extends Sprite implements Eliminable {
-    private List<Ladrillo> listaLadrillos;
-    public Ladrillo(GameLogic logica) {
+    Rectangle ladrillo;
+    Rectangle pelotita;
+    GameLogic logic;
+
+    public Ladrillo(GameLogic logica, int x, int y, int numeroSkin) {
         super(new String[]{
             "assets/img/brick_blue.png",
             "assets/img/brick_cyan.png",
@@ -26,67 +31,31 @@ public class Ladrillo extends Sprite implements Eliminable {
             "assets/img/brick_yellow.png",
             "assets/img/hard.png"
         });
-        int cantidad = 0;
-        int filas = 0;
-        String[][] m = MapaNivel.mapa;
-        for (int i = 0; i < m.length; i++) {
-            for (int j = 0; j < m[0].length; j++) {
-                String f = m[i][j];
-                for (int k = 0; k < f.length(); k++) {
-                    char x = f.charAt(k);
-                    switch (x) {
-                        case 'b':
-                            setSkin(0);
-                            break;
-                        case 'c':
-                            setSkin(1);
-                            break;
-                        case 'g':
-                            setSkin(2);
-                            break;
-                        case 'm':
-                            setSkin(3);
-                            break;
-                        case 'o':
-                            setSkin(4);
-                            break;
-                        case 'r':
-                            setSkin(5);
-                            break;
-                        case 'y':
-                            setSkin(6);
-                            break;
-                        case 'h':
-                            setSkin(7);
-                            break;
-                        default:
-                            break;
-                    }
-                    if (cantidad > 11) {
-                        cantidad = 0;
-                        filas++;
-                    }
-                    setX(20 +(44 * cantidad));
-                    setY(20 +(22 * filas));
-                    cantidad++;
-                    listaLadrillos.add(this);
-                }
-            }
-        }
+        setX(x);
+        setY(y);
+        setSkin(numeroSkin);
+        setWidth(60);
+        this.logic = logica;       
     }
 
     @Override
     public boolean estaEliminado() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        ladrillo = new Rectangle(getX(), getY(), getWidth(), getHeight());
+        Pelota p = null;
+        List<Dibujable> l = new LinkedList<>(logic.getListaObjetos());
+        for (Dibujable d : l) {
+            if (d instanceof Pelota) {
+                p = (Pelota) d;
+                break;
+            }
+        }
+        pelotita = new Rectangle(p.getX(), p.getY(), p.getWidth(), p.getHeight());
+        if (pelotita.intersects(ladrillo)) {
+            p.setIncreY(-p.getIncreY());
+            return true;
+        }
+        return false;
     }
-
-    public List<Ladrillo> getListaLadrillos() {
-        return listaLadrillos;
-    }
-
-    public void setListaLadrillos(List<Ladrillo> listaLadrillos) {
-        this.listaLadrillos = listaLadrillos;
-    }
-    
-    
+      
 }
