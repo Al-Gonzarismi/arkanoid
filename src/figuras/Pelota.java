@@ -8,6 +8,7 @@ package figuras;
 import figuras.base.Animable;
 import figuras.base.Dibujable;
 import figuras.base.Sprite;
+import java.awt.Graphics;
 import logic.GameLogic;
 import java.awt.Rectangle;
 import java.util.*;
@@ -28,8 +29,8 @@ public class Pelota extends Sprite implements Animable {
         });
         setX(330);
         setY(560);
-        increX = 5;
-        increY = 5;
+        increX = 7;
+        increY = 7;
         this.logic = logic;
     }
 
@@ -37,8 +38,8 @@ public class Pelota extends Sprite implements Animable {
     public void mover() {
         setX(getX() + increX);
         setY(getY() - increY);
-        if (getY() == 565) {
-            Breakout b = null;
+        Breakout b = null;
+        if (getY() >= 560 && logic.isEspacio()) {
             List<Dibujable> l = new ArrayList<>(logic.getListaObjetos());
             for (Dibujable d : l) {
                 if (d instanceof Breakout) {
@@ -46,8 +47,8 @@ public class Pelota extends Sprite implements Animable {
                     break;
                 }
             }
-            nave = new Rectangle(b.getX(), b.getY(), b.getWidth(), b.getHeight());
             pelotita = new Rectangle (getX(), getY(), getWidth(), getHeight());
+            nave = new Rectangle(b.getX(), b.getY(), b.getWidth(), b.getHeight());
             if (nave.intersects(pelotita)) {
                 increY = -increY;
             }
@@ -56,6 +57,13 @@ public class Pelota extends Sprite implements Animable {
             increX = -increX;
         } else if (getY() < 61) {
             increY = -increY;
+        } else if (getY() > 650) {
+            setX(b.getX() + 30);
+            setY(b.getY() - 10);
+            logic.setVidas(logic.getVidas() - 1);
+            if (logic.getVidas() < 1) {
+                logic.empezar();
+            }
         }
     }
     
