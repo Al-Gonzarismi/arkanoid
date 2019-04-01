@@ -58,12 +58,10 @@ public class Pelota extends Sprite implements Animable {
         } else if (getY() < 61) {
             increY = -increY;
         } else if (getY() > 650) {
+            logic.setVidas(logic.getVidas() - 1);
+            logic.setEspacio(false);
             setX(b.getX() + 30);
             setY(b.getY() - 10);
-            logic.setVidas(logic.getVidas() - 1);
-            if (logic.getVidas() < 1) {
-                logic.empezar();
-            }
         }
     }
     
