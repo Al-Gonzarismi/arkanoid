@@ -46,6 +46,7 @@ public class GameLogic {
     
     // TODO Añadir la pelota, una colección con los ladrillos, etc..
     boolean espacio = false;
+    int golpes = 0;
 
     public GameLogic() {
         listaObjetosDibujables = new LinkedList<>();
@@ -67,6 +68,11 @@ public class GameLogic {
             Dibujable objetoDelJuego = iter.next(); // Acceder al objeto
             if (objetoDelJuego instanceof Eliminable) { // Si está eliminado lo quitamos
                 if (((Eliminable) objetoDelJuego).estaEliminado()) {
+                    puntos += 50;
+                    /*if (puntos == 650) {
+                        //puntosADD = 0;
+                        //Meter habilidades especiales
+                    } */
                     iter.remove();
                     continue;
                 }
@@ -74,6 +80,9 @@ public class GameLogic {
             objetoDelJuego.dibujar(g); // lo dibujamos
             if (objetoDelJuego instanceof Animable) { // Y si está auto-animado, lo movemos
                 if (objetoDelJuego instanceof Pelota) {
+                    if (((Pelota) objetoDelJuego).getY() == 650) {
+                        espacio = false;
+                    }
                     if (espacio) {
                         ((Animable) objetoDelJuego).mover();
                     }
@@ -115,6 +124,7 @@ public class GameLogic {
     public void empezar() {
         // TO-DO Inicia el juego!
         listaObjetosDibujables.clear();
+        listaLadrillos.clear();
         inicializarNivel(0);
     }
 
@@ -195,4 +205,12 @@ public class GameLogic {
         return puntos;
     }
 
+    public void setVidas(int vidas) {
+        this.vidas = vidas;
+    }
+
+    public boolean isEspacio() {
+        return espacio;
+    }
+    
 }
