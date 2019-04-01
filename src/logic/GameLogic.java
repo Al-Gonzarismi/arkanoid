@@ -9,6 +9,7 @@ import audio.StdSound;
 import figuras.Breakout;
 import figuras.Fondo;
 import figuras.Ladrillo;
+import figuras.LadrilloHabilidad;
 import figuras.Marcador;
 import figuras.Pelota;
 import figuras.base.Animable;
@@ -19,6 +20,7 @@ import java.awt.event.KeyEvent;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -43,9 +45,10 @@ public class GameLogic {
     Breakout breakout;
     Pelota pelota;
     Ladrillo ladrillo;
+    LadrilloHabilidad ladrilloHabilidad;
     
     // TODO Añadir la pelota, una colección con los ladrillos, etc..
-    boolean espacio = false;
+    private boolean espacio = false;
     int golpes = 0;
 
     public GameLogic() {
@@ -60,6 +63,7 @@ public class GameLogic {
      * @param g
      */
     public void dibujarYActualizarTodo(Graphics g) {
+        int puntosAdi = 0;
         Iterator<Dibujable> iter = listaObjetosDibujables.iterator();
         while (true) {
             if (!iter.hasNext()) { // Si no hay siguiente, salir del bucle
@@ -69,10 +73,15 @@ public class GameLogic {
             if (objetoDelJuego instanceof Eliminable) { // Si está eliminado lo quitamos
                 if (((Eliminable) objetoDelJuego).estaEliminado()) {
                     puntos += 50;
-                    /*if (puntos == 650) {
-                        //puntosADD = 0;
-                        //Meter habilidades especiales
-                    } */
+                    /*puntosAdi += 50;
+                    if (puntosAdi == 650) {
+                        Random miRandom = new Random();
+                        int habilidadAleatoria = miRandom.nextInt(4);
+                        ladrillo = (Ladrillo) objetoDelJuego;
+                        puntosAdi = 0;
+                        ladrilloHabilidad = new LadrilloHabilidad(this, ladrillo.getX(), ladrillo.getY(), habilidadAleatoria);
+                        ladrillo.dibujar(g);
+                    }*/
                     iter.remove();
                     continue;
                 }
@@ -80,9 +89,6 @@ public class GameLogic {
             objetoDelJuego.dibujar(g); // lo dibujamos
             if (objetoDelJuego instanceof Animable) { // Y si está auto-animado, lo movemos
                 if (objetoDelJuego instanceof Pelota) {
-                    if (((Pelota) objetoDelJuego).getY() == 650) {
-                        espacio = false;
-                    }
                     if (espacio) {
                         ((Animable) objetoDelJuego).mover();
                     }
@@ -90,6 +96,9 @@ public class GameLogic {
                     ((Animable) objetoDelJuego).mover();
                 }
             }
+        }
+        if (getVidas() == 0) {
+            empezar();
         }
     }
 
@@ -211,6 +220,10 @@ public class GameLogic {
 
     public boolean isEspacio() {
         return espacio;
+    }
+
+    public void setEspacio(boolean espacio) {
+        this.espacio = espacio;
     }
     
 }
