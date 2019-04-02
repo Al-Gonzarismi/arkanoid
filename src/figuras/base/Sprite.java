@@ -74,6 +74,8 @@ public abstract class Sprite implements Dibujable {
             throw new IllegalArgumentException("No existe piel indice " + i);
         }
         selectedSkin = i;
+        setHeight(skin[i].getHeight());
+        setWidth(skin[i].getWidth());
     }
 
     /**
