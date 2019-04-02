@@ -18,19 +18,20 @@ import logic.GameLogic;
  * @author 1_web9_20
  */
 public class LadrilloHabilidad extends Sprite implements Animable, Eliminable {
-
+    boolean habilitar;
+    int cantidadGolpes = 0;
     GameLogic logic;
     Rectangle ladrilloHabilidad;
     Rectangle nave;
+    Rectangle pelotita;
     List<Dibujable> l;
 
     public LadrilloHabilidad(GameLogic logic, int x, int y, int numeroSkin) {
         super(new String[]{
-            "assets/img/special_blue.png",
-            "assets/img/special_magenta.png",
-            "assets/img/special_red.png",
-            "assets/img/special_orange.png", //dopar la nave
-            "assets/img/special_orange.png", // relentizar la nave
+            "assets/img/special_blue.png", //cambiar skin nave
+            "assets/img/special_magenta.png",//dopar pelota o relentizar
+            "assets/img/special_red.png", //vida o relentizar nave y dopar pelota
+            "assets/img/special_orange.png", //dopar la nave o relentizar
         });
         setX(x);
         setY(y);
@@ -44,12 +45,14 @@ public class LadrilloHabilidad extends Sprite implements Animable, Eliminable {
 
     @Override
     public void mover() {
-        setY(getY() + 5);
+        setY(getY() + 2);
     }
 
     public void habilidad(int i) {
         Breakout b = null;
         Pelota p = null;
+        Random r = new Random();
+        int ale = r.nextInt(2);
         for (Dibujable d : l) {
             if (d instanceof Breakout) {
                 b = (Breakout) d;
@@ -59,23 +62,50 @@ public class LadrilloHabilidad extends Sprite implements Animable, Eliminable {
             }
         }
         if (i == 0) {
-            b.setSkin(1);
+            if (ale == 0) {
+                b.setSkin(1);
+            } else {
+                b.setSkin(0);
+            }
         } else if (i == 1) {
-            p.setIncreY(p.getIncreY() * 2);
-            p.setIncreX(p.getIncreX() * 2);
-
+            if (ale == 0) {
+                p.setIncreY(p.getIncreY() * 2);
+                p.setIncreX(p.getIncreX() * 2);
+            } else {
+                p.setIncreY(p.getIncreY() / 2);
+                p.setIncreX(p.getIncreX() / 2);
+            }
         } else if (i == 2) {
-            logic.setVidas(logic.getVidas() + 1);
+            if (ale == 0) {
+                logic.setVidas(logic.getVidas() + 1);
+            } else {
+                p.setIncreY(p.getIncreY() * 2);
+                p.setIncreX(p.getIncreX() * 2);
+                if (b.getIncre() > 2) {
+                    b.setIncre(b.getIncre() / 2);
+                }
+            }
+        } else if (i == 3) {
+            if (ale == 0) {
+                b.setIncre(b.getIncre() * 2);
+            } else {
+                if (b.getIncre() > 2) {
+                    b.setIncre(b.getIncre() / 2);
+                }
+            }
         }
     }
 
     @Override
     public boolean estaEliminado() {
         Breakout b = null;
+        Pelota p = null;
         for (Dibujable d : l) {
             if (d instanceof Breakout) {
                 b = (Breakout) d;
-                break;
+            }
+            if (d instanceof Pelota) {
+                p = (Pelota) d;
             }
         }
         nave = new Rectangle(b.getX(), b.getY(), b.getWidth(), b.getHeight());
