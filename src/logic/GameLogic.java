@@ -46,11 +46,12 @@ public class GameLogic {
     Pelota pelota;
     Ladrillo ladrillo;
     LadrilloHabilidad ladrilloHabilidad;
-    
+
     // TODO Añadir la pelota, una colección con los ladrillos, etc..
     private boolean espacio = false;
     int golpes = 0;
-
+    int puntosAdi = 0;
+    
     public GameLogic() {
         listaObjetosDibujables = new LinkedList<>();
         listaLadrillos = new LinkedList<>();
@@ -63,7 +64,8 @@ public class GameLogic {
      * @param g
      */
     public void dibujarYActualizarTodo(Graphics g) {
-        int puntosAdi = 0;
+        int ejeX = 0;
+        int ejeY = 0;
         Iterator<Dibujable> iter = listaObjetosDibujables.iterator();
         while (true) {
             if (!iter.hasNext()) { // Si no hay siguiente, salir del bucle
@@ -73,15 +75,14 @@ public class GameLogic {
             if (objetoDelJuego instanceof Eliminable) { // Si está eliminado lo quitamos
                 if (((Eliminable) objetoDelJuego).estaEliminado()) {
                     puntos += 50;
-                    /*puntosAdi += 50;
-                    if (puntosAdi == 650) {
-                        Random miRandom = new Random();
-                        int habilidadAleatoria = miRandom.nextInt(4);
-                        ladrillo = (Ladrillo) objetoDelJuego;
-                        puntosAdi = 0;
-                        ladrilloHabilidad = new LadrilloHabilidad(this, ladrillo.getX(), ladrillo.getY(), habilidadAleatoria);
-                        ladrillo.dibujar(g);
-                    }*/
+                    puntosAdi += 50;
+                    if (puntosAdi == 100) {
+                        if (objetoDelJuego instanceof Ladrillo) {
+                            ladrillo = (Ladrillo) objetoDelJuego;
+                            ejeX = ladrillo.getX();
+                            ejeY = ladrillo.getY();
+                        }
+                    }
                     iter.remove();
                     continue;
                 }
@@ -99,6 +100,13 @@ public class GameLogic {
         }
         if (getVidas() == 0) {
             empezar();
+        }
+        if (puntosAdi == 100) {
+            Random miRandom = new Random();
+            int habilidadAleatoria = miRandom.nextInt(2);
+            puntosAdi = 0;
+            ladrilloHabilidad = new LadrilloHabilidad(this, ejeX, ejeY, habilidadAleatoria);
+            listaObjetosDibujables.add(ladrilloHabilidad);
         }
     }
 
@@ -225,5 +233,5 @@ public class GameLogic {
     public void setEspacio(boolean espacio) {
         this.espacio = espacio;
     }
-    
+
 }
