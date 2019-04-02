@@ -14,6 +14,8 @@ import logic.GameLogic;
  */
 public class Breakout extends Sprite {
     
+    private int incre;
+    
     public Breakout(GameLogic logic) {
         super(new String[]{
             "assets/img/breakout.png",
@@ -22,14 +24,23 @@ public class Breakout extends Sprite {
         // cambiar y terminar
         setX(300);
         setY(570);
+        incre = 5;
     }
     
     public void moverIzquierda() {
-        setX(getX() - 5);
+        setX(getX() - incre);
     }
     
     public void moverDerecha() {
-        setX(getX() + 5);
+        setX(getX() + incre);
+    }
+
+    public int getIncre() {
+        return incre;
+    }
+
+    public void setIncre(int incre) {
+        this.incre = incre;
     }
     
 }
