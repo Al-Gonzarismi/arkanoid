@@ -12,19 +12,23 @@ import java.awt.Graphics;
 import logic.GameLogic;
 import java.awt.Rectangle;
 import java.util.*;
+
 /**
  *
  * @author Usuario
  */
 public class Pelota extends Sprite implements Animable {
+
     Rectangle nave;
     Rectangle pelotita;
     GameLogic logic;
-    
+    List<Dibujable> l;
+    int incre;
     private int increX;
     private int increY;
+
     public Pelota(GameLogic logic) {
-        super(new String[] {
+        super(new String[]{
             "assets/img/ball.png"
         });
         setX(330);
@@ -32,6 +36,7 @@ public class Pelota extends Sprite implements Animable {
         increX = 5;
         increY = 5;
         this.logic = logic;
+        l = new ArrayList<>(logic.getListaObjetos());
     }
 
     @Override
@@ -40,14 +45,13 @@ public class Pelota extends Sprite implements Animable {
         setY(getY() - increY);
         Breakout b = null;
         if (getY() >= 560 && logic.isEspacio()) {
-            List<Dibujable> l = new ArrayList<>(logic.getListaObjetos());
             for (Dibujable d : l) {
                 if (d instanceof Breakout) {
                     b = (Breakout) d;
                     break;
                 }
             }
-            pelotita = new Rectangle (getX(), getY(), getWidth(), getHeight());
+            pelotita = new Rectangle(getX(), getY(), getWidth(), getHeight());
             nave = new Rectangle(b.getX(), b.getY(), b.getWidth(), b.getHeight());
             if (nave.intersects(pelotita)) {
                 increY = -increY;
@@ -60,17 +64,31 @@ public class Pelota extends Sprite implements Animable {
         } else if (getY() > 650) {
             logic.setVidas(logic.getVidas() - 1);
             logic.setEspacio(false);
-            setX(b.getX() + 30);
+            setX(b.getX() + b.getWidth() / 2);
             setY(b.getY() - 10);
         }
     }
-    
+
     public void moverIzquierda() {
-        setX(getX() - 5);
+        Breakout b = null;
+        for (Dibujable d : l) {
+            if (d instanceof Breakout) {
+                b = (Breakout) d;
+                break;
+            }
+        }
+        setX(getX() - b.getIncre());
     }
-    
+
     public void moverDerecha() {
-        setX(getX() + 5);
+        Breakout b = null;
+        for (Dibujable d : l) {
+            if (d instanceof Breakout) {
+                b = (Breakout) d;
+                break;
+            }
+        }
+        setX(getX() + b.getIncre());
     }
 
     public int getIncreX() {
@@ -88,5 +106,5 @@ public class Pelota extends Sprite implements Animable {
     public void setIncreY(int increY) {
         this.increY = increY;
     }
-    
+
 }
