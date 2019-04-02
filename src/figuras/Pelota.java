@@ -29,8 +29,8 @@ public class Pelota extends Sprite implements Animable {
         });
         setX(330);
         setY(560);
-        increX = 7;
-        increY = 7;
+        increX = 5;
+        increY = 5;
         this.logic = logic;
     }
 
