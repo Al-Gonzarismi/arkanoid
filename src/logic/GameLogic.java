@@ -51,6 +51,8 @@ public class GameLogic {
     private boolean espacio = false;
     int golpes = 0;
     int puntosAdi = 0;
+    int indice = 0;
+    int level = 0;
     
     public GameLogic() {
         listaObjetosDibujables = new LinkedList<>();
@@ -74,14 +76,16 @@ public class GameLogic {
             Dibujable objetoDelJuego = iter.next(); // Acceder al objeto
             if (objetoDelJuego instanceof Eliminable) { // Si está eliminado lo quitamos
                 if (((Eliminable) objetoDelJuego).estaEliminado()) {
-                    puntos += 50;
-                    puntosAdi += 50;
-                    if (puntosAdi == 100) {
-                        if (objetoDelJuego instanceof Ladrillo) {
-                            ladrillo = (Ladrillo) objetoDelJuego;
-                            ejeX = ladrillo.getX();
-                            ejeY = ladrillo.getY();
+                    if (objetoDelJuego instanceof Ladrillo) {
+                        puntos += 50;
+                        puntosAdi += 50;
+                        if (puntosAdi >= 200) {
+                                ladrillo = (Ladrillo) objetoDelJuego;
+                                ejeX = ladrillo.getX();
+                                ejeY = ladrillo.getY();
                         }
+                        listaLadrillos.remove(indice);
+                        indice++;
                     }
                     iter.remove();
                     continue;
@@ -98,12 +102,16 @@ public class GameLogic {
                 }
             }
         }
+        if (listaLadrillos.isEmpty()) {
+            level++;
+            inicializarNivel(level);
+        }
         if (getVidas() == 0) {
             empezar();
         }
-        if (puntosAdi == 100) {
+        if (puntosAdi >= 200) {
             Random miRandom = new Random();
-            int habilidadAleatoria = miRandom.nextInt(2);
+            int habilidadAleatoria = miRandom.nextInt(4);
             puntosAdi = 0;
             ladrilloHabilidad = new LadrilloHabilidad(this, ejeX, ejeY, habilidadAleatoria);
             listaObjetosDibujables.add(ladrilloHabilidad);
@@ -209,6 +217,57 @@ public class GameLogic {
             }
             listaObjetosDibujables.addAll(listaLadrillos);// inyección de dependencias
             // TODO 
+        } else if (nivel == 1) {
+            int x;
+            int y;
+            int numeroSkin = 0;
+            int cantidad = 0;
+            int filas = 0;
+            String[][] m = MapaNivel.mapa;
+            for (int j = 0; j < m[nivel].length; j++) {
+                String f = m[nivel][j];
+                for (int k = 0; k < f.length(); k++) {
+                    char c = f.charAt(k);
+                    switch (c) {
+                        case 'b':
+                            numeroSkin = 0;
+                            break;
+                        case 'c':
+                            numeroSkin = 1;
+                            break;
+                        case 'g':
+                            numeroSkin = 2;
+                            break;
+                        case 'm':
+                            numeroSkin = 3;
+                            break;
+                        case 'o':
+                            numeroSkin = 4;
+                            break;
+                        case 'r':
+                            numeroSkin = 5;
+                            break;
+                        case 'y':
+                            numeroSkin = 6;
+                            break;
+                        case 'h':
+                            numeroSkin = 7;
+                            break;
+                        default:
+                            break;
+                    }
+                    if (cantidad > 7) {
+                        cantidad = 0;
+                        filas++;
+                    }
+                    x = (20 + (60 * cantidad));
+                    y = (60 + (22 * filas));
+                    cantidad++;
+                    ladrillo = new Ladrillo(this, x, y, numeroSkin);
+                    listaLadrillos.add(ladrillo);
+                }
+            }
+            listaObjetosDibujables.addAll(listaLadrillos);// inyección de dependencias
         }
 
         // TODO 
