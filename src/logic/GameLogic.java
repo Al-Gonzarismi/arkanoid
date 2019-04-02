@@ -77,6 +77,7 @@ public class GameLogic {
             if (objetoDelJuego instanceof Eliminable) { // Si está eliminado lo quitamos
                 if (((Eliminable) objetoDelJuego).estaEliminado()) {
                     if (objetoDelJuego instanceof Ladrillo) {
+                        listaLadrillos.remove(objetoDelJuego);
                         puntos += 50;
                         puntosAdi += 50;
                         if (puntosAdi >= 200) {
@@ -84,8 +85,6 @@ public class GameLogic {
                                 ejeX = ladrillo.getX();
                                 ejeY = ladrillo.getY();
                         }
-                        listaLadrillos.remove(indice);
-                        indice++;
                     }
                     iter.remove();
                     continue;
@@ -201,6 +200,8 @@ public class GameLogic {
                         case 'h':
                             numeroSkin = 7;
                             break;
+                        case ' ':
+                            numeroSkin = -1;
                         default:
                             break;
                     }
@@ -211,8 +212,10 @@ public class GameLogic {
                     x = (20 + (60 * cantidad));
                     y = (60 + (22 * filas));
                     cantidad++;
-                    ladrillo = new Ladrillo(this, x, y, numeroSkin);
-                    listaLadrillos.add(ladrillo);
+                    if (numeroSkin >= 0) {
+                        ladrillo = new Ladrillo(this, x, y, numeroSkin);
+                        listaLadrillos.add(ladrillo);
+                    }
                 }
             }
             listaObjetosDibujables.addAll(listaLadrillos);// inyección de dependencias
@@ -253,6 +256,8 @@ public class GameLogic {
                         case 'h':
                             numeroSkin = 7;
                             break;
+                        case ' ':
+                            numeroSkin = -1;
                         default:
                             break;
                     }
@@ -263,11 +268,14 @@ public class GameLogic {
                     x = (20 + (60 * cantidad));
                     y = (60 + (22 * filas));
                     cantidad++;
-                    ladrillo = new Ladrillo(this, x, y, numeroSkin);
-                    listaLadrillos.add(ladrillo);
+                    if (numeroSkin >= 0) {
+                        ladrillo = new Ladrillo(this, x, y, numeroSkin);
+                        listaLadrillos.add(ladrillo);
+                    }
                 }
             }
             listaObjetosDibujables.addAll(listaLadrillos);// inyección de dependencias
+            // TODO 
         }
 
         // TODO 
