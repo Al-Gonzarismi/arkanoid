@@ -21,6 +21,10 @@ public class Ladrillo extends Sprite implements Eliminable {
     Rectangle ladrillo;
     Rectangle ladrilloLadoIzq;
     Rectangle ladrilloLadoDcha;
+    Rectangle esquinaArIzq;
+    Rectangle esquinaAbIzq;
+    Rectangle esquinaArDcha;
+    Rectangle esquinaAbDcha;
     Rectangle pelotita;
     GameLogic logic;
     int numeroSkin;
@@ -56,6 +60,10 @@ public class Ladrillo extends Sprite implements Eliminable {
         ladrillo = new Rectangle(getX(), getY(), getWidth(), getHeight());
         ladrilloLadoIzq = new Rectangle(getX(), getY() + 2, 1, getHeight() - 4);
         ladrilloLadoDcha = new Rectangle(getX() + getWidth(), getY() + 2, 1, getHeight() - 4);
+        esquinaArIzq = new Rectangle(getX(), getY(), 2, 2);
+        esquinaAbIzq = new Rectangle(getX(), getY() + getHeight() - 2, 2, 2);
+        esquinaArDcha = new Rectangle(getX() + getWidth() - 2, getY(), 2, 2);
+        esquinaAbDcha = new Rectangle(getX() + getWidth() - 2, getY() + getHeight() - 2, 2, 2);
         Pelota p = null;
         List<Dibujable> l = new LinkedList<>(logic.getListaObjetos());
         for (Dibujable d : l) {
@@ -68,6 +76,10 @@ public class Ladrillo extends Sprite implements Eliminable {
         if (pelotita.intersects(ladrillo)) {
             if (pelotita.intersects(ladrilloLadoDcha) || pelotita.intersects(ladrilloLadoIzq)) {
                 p.setIncreX(-p.getIncreX());
+            } else if (pelotita.intersects(esquinaAbDcha) || pelotita.intersects(esquinaAbIzq)
+                    || pelotita.intersects(esquinaArDcha) || pelotita.intersects(esquinaArIzq)) {
+                p.setIncreX(-p.getIncreX());
+                p.setIncreY(-p.getIncreY());
             } else {
                 p.setIncreY(-p.getIncreY());
             }
