@@ -63,9 +63,7 @@ public class Pelota extends Sprite implements Animable {
             increY = -increY;
         } else if (getY() > 650) {
             logic.setVidas(logic.getVidas() - 1);
-            logic.setEspacio(false);
-            setX(b.getX() + b.getWidth() / 2);
-            setY(b.getY() - 10);
+            logic.reset();
         }
     }
 
@@ -77,7 +75,9 @@ public class Pelota extends Sprite implements Animable {
                 break;
             }
         }
-        setX(getX() - b.getIncre());
+        if (getX() - b.getWidth() / 2 > 0) {
+            setX(getX() - b.getIncre());
+        }
     }
 
     public void moverDerecha() {
@@ -88,7 +88,10 @@ public class Pelota extends Sprite implements Animable {
                 break;
             }
         }
-        setX(getX() + b.getIncre());
+        if (getX() + b.getWidth() / 2 < 520) {
+            setX(getX() + b.getIncre());
+        }
+        
     }
 
     public int getIncreX() {
