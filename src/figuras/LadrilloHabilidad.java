@@ -52,7 +52,7 @@ public class LadrilloHabilidad extends Sprite implements Animable, Eliminable {
         Breakout b = null;
         Pelota p = null;
         Random r = new Random();
-        int ale = r.nextInt(2);
+        int ale = r.nextInt(4);
         for (Dibujable d : l) {
             if (d instanceof Breakout) {
                 b = (Breakout) d;
@@ -63,9 +63,9 @@ public class LadrilloHabilidad extends Sprite implements Animable, Eliminable {
         }
         if (i == 0) {
             if (ale == 0) {
-                b.setSkin(1);
-            } else {
                 b.setSkin(0);
+            } else {
+                b.setSkin(1);
             }
         } else if (i == 1) {
             if (ale == 0) {
@@ -77,21 +77,21 @@ public class LadrilloHabilidad extends Sprite implements Animable, Eliminable {
             }
         } else if (i == 2) {
             if (ale == 0) {
-                logic.setVidas(logic.getVidas() + 1);
-            } else {
                 p.setIncreY(p.getIncreY() * 2);
                 p.setIncreX(p.getIncreX() * 2);
                 if (b.getIncre() > 2) {
                     b.setIncre(b.getIncre() / 2);
                 }
+            } else {
+                logic.setVidas(logic.getVidas() + 1);
             }
         } else if (i == 3) {
             if (ale == 0) {
-                b.setIncre(b.getIncre() * 2);
-            } else {
                 if (b.getIncre() > 2) {
                     b.setIncre(b.getIncre() / 2);
                 }
+            } else {
+                b.setIncre(b.getIncre() * 2);
             }
         }
     }
