@@ -81,7 +81,7 @@ public class GameLogic {
                         listaLadrillos.remove(objetoDelJuego);
                         puntos += 10;
                         puntosAdi += 10;
-                        if (puntosAdi >= 100) {
+                        if (puntosAdi >= 80) {
                             ladrillo = (Ladrillo) objetoDelJuego;
                             ejeX = ladrillo.getX();
                             ejeY = ladrillo.getY();
@@ -112,7 +112,7 @@ public class GameLogic {
         if (getVidas() == 0) {
             empezar();
         }
-        if (puntosAdi >= 100) {
+        if (puntosAdi >= 80) {
             Random miRandom = new Random();
             int habilidadAleatoria = miRandom.nextInt(4);
             puntosAdi = 0;
@@ -232,6 +232,7 @@ public class GameLogic {
     }
 
     public void reset() {
+        puntosAdi = 0;
         espacio = false;
         Breakout b = null;
         Pelota p = null;
