@@ -49,11 +49,12 @@ public class GameLogic {
 
     // TODO Añadir la pelota, una colección con los ladrillos, etc..
     private boolean espacio = false;
-    int golpes = 0;
+    private int highscore = 0;
+    private int level = 0;
+    //Variable de apoyo
     int puntosAdi = 0;
-    int indice = 0;
-    int level = 0;
     
+
     public GameLogic() {
         listaObjetosDibujables = new LinkedList<>();
         listaLadrillos = new LinkedList<>();
@@ -78,12 +79,12 @@ public class GameLogic {
                 if (((Eliminable) objetoDelJuego).estaEliminado()) {
                     if (objetoDelJuego instanceof Ladrillo) {
                         listaLadrillos.remove(objetoDelJuego);
-                        puntos += 50;
-                        puntosAdi += 50;
-                        if (puntosAdi >= 200) {
-                                ladrillo = (Ladrillo) objetoDelJuego;
-                                ejeX = ladrillo.getX();
-                                ejeY = ladrillo.getY();
+                        puntos += 10;
+                        puntosAdi += 10;
+                        if (puntosAdi >= 100) {
+                            ladrillo = (Ladrillo) objetoDelJuego;
+                            ejeX = ladrillo.getX();
+                            ejeY = ladrillo.getY();
                         }
                     }
                     iter.remove();
@@ -101,6 +102,9 @@ public class GameLogic {
                 }
             }
         }
+        if (puntos > highscore) {
+            highscore = puntos;
+        }
         if (listaLadrillos.isEmpty()) {
             level++;
             inicializarNivel(level);
@@ -108,7 +112,7 @@ public class GameLogic {
         if (getVidas() == 0) {
             empezar();
         }
-        if (puntosAdi >= 200) {
+        if (puntosAdi >= 100) {
             Random miRandom = new Random();
             int habilidadAleatoria = miRandom.nextInt(4);
             puntosAdi = 0;
@@ -165,120 +169,86 @@ public class GameLogic {
             listaObjetosDibujables.add(breakout);
             pelota = new Pelota(this);
             listaObjetosDibujables.add(pelota);// inyección de dependencias
-            int x;
-            int y;
-            int numeroSkin = 0;
-            int cantidad = 0;
-            int filas = 0;
-            String[][] m = MapaNivel.mapa;
-            for (int j = 0; j < m[nivel].length; j++) {
-                String f = m[nivel][j];
-                for (int k = 0; k < f.length(); k++) {
-                    char c = f.charAt(k);
-                    switch (c) {
-                        case 'b':
-                            numeroSkin = 0;
-                            break;
-                        case 'c':
-                            numeroSkin = 1;
-                            break;
-                        case 'g':
-                            numeroSkin = 2;
-                            break;
-                        case 'm':
-                            numeroSkin = 3;
-                            break;
-                        case 'o':
-                            numeroSkin = 4;
-                            break;
-                        case 'r':
-                            numeroSkin = 5;
-                            break;
-                        case 'y':
-                            numeroSkin = 6;
-                            break;
-                        case 'h':
-                            numeroSkin = 7;
-                            break;
-                        case ' ':
-                            numeroSkin = -1;
-                        default:
-                            break;
-                    }
-                    if (cantidad > 7) {
-                        cantidad = 0;
-                        filas++;
-                    }
-                    x = (20 + (60 * cantidad));
-                    y = (60 + (22 * filas));
-                    cantidad++;
-                    if (numeroSkin >= 0) {
-                        ladrillo = new Ladrillo(this, x, y, numeroSkin);
-                        listaLadrillos.add(ladrillo);
-                    }
-                }
-            }
-            listaObjetosDibujables.addAll(listaLadrillos);// inyección de dependencias
-            // TODO 
-        } else if (nivel == 1) {
-            int x;
-            int y;
-            int numeroSkin = 0;
-            int cantidad = 0;
-            int filas = 0;
-            String[][] m = MapaNivel.mapa;
-            for (int j = 0; j < m[nivel].length; j++) {
-                String f = m[nivel][j];
-                for (int k = 0; k < f.length(); k++) {
-                    char c = f.charAt(k);
-                    switch (c) {
-                        case 'b':
-                            numeroSkin = 0;
-                            break;
-                        case 'c':
-                            numeroSkin = 1;
-                            break;
-                        case 'g':
-                            numeroSkin = 2;
-                            break;
-                        case 'm':
-                            numeroSkin = 3;
-                            break;
-                        case 'o':
-                            numeroSkin = 4;
-                            break;
-                        case 'r':
-                            numeroSkin = 5;
-                            break;
-                        case 'y':
-                            numeroSkin = 6;
-                            break;
-                        case 'h':
-                            numeroSkin = 7;
-                            break;
-                        case ' ':
-                            numeroSkin = -1;
-                        default:
-                            break;
-                    }
-                    if (cantidad > 7) {
-                        cantidad = 0;
-                        filas++;
-                    }
-                    x = (20 + (60 * cantidad));
-                    y = (60 + (22 * filas));
-                    cantidad++;
-                    if (numeroSkin >= 0) {
-                        ladrillo = new Ladrillo(this, x, y, numeroSkin);
-                        listaLadrillos.add(ladrillo);
-                    }
-                }
-            }
-            listaObjetosDibujables.addAll(listaLadrillos);// inyección de dependencias
-            // TODO 
-        }
 
+            // TODO 
+        } else {
+            reset();
+        }
+        int x;
+        int y;
+        int numeroSkin = 0;
+        int cantidad = 0;
+        int filas = 0;
+        String[][] m = MapaNivel.mapa;
+        for (int j = 0; j < m[nivel].length; j++) {
+            String f = m[nivel][j];
+            for (int k = 0; k < f.length(); k++) {
+                char c = f.charAt(k);
+                switch (c) {
+                    case 'b':
+                        numeroSkin = 0;
+                        break;
+                    case 'c':
+                        numeroSkin = 1;
+                        break;
+                    case 'g':
+                        numeroSkin = 2;
+                        break;
+                    case 'm':
+                        numeroSkin = 3;
+                        break;
+                    case 'o':
+                        numeroSkin = 4;
+                        break;
+                    case 'r':
+                        numeroSkin = 5;
+                        break;
+                    case 'y':
+                        numeroSkin = 6;
+                        break;
+                    case 'h':
+                        numeroSkin = 7;
+                        break;
+                    case ' ':
+                        numeroSkin = -1;
+                    default:
+                        break;
+                }
+                if (cantidad > 7) {
+                    cantidad = 0;
+                    filas++;
+                }
+                x = (20 + (60 * cantidad));
+                y = (60 + (22 * filas));
+                cantidad++;
+                if (numeroSkin >= 0) {
+                    ladrillo = new Ladrillo(this, x, y, numeroSkin);
+                    listaLadrillos.add(ladrillo);
+                }
+            }
+        }
+        listaObjetosDibujables.addAll(listaLadrillos);// inyección de dependencias
         // TODO 
+    }
+
+    public void reset() {
+        espacio = false;
+        Breakout b = null;
+        Pelota p = null;
+        for (Dibujable d : listaObjetosDibujables) {
+            if (d instanceof Breakout) {
+                b = (Breakout) d;
+            }
+            if (d instanceof Pelota) {
+                p = (Pelota) d;
+            }
+        }
+        p.setX(b.getX() + b.getWidth() / 2);
+        p.setY(b.getY() - 10);
+        p.setIncreX(5);
+        p.setIncreY(5);
+        b.setSkin(0);
+        b.setIncre(5);
     }
 
     public int getVidas() {
@@ -299,6 +269,22 @@ public class GameLogic {
 
     public void setEspacio(boolean espacio) {
         this.espacio = espacio;
+    }
+
+    public int getHighscore() {
+        return highscore;
+    }
+
+    public void setHighscore(int highscore) {
+        this.highscore = highscore;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
 }
