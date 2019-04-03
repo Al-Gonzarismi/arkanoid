@@ -40,7 +40,7 @@ public class Marcador implements Dibujable {
         for (int i = 0; i < logica.getVidas(); i++) {
             cadenaVidas += "#";
         }
-        String msg = String.format("NIVEL:%d/6   HIGHSCORE:%05d%50.10s/%05d", logica.getLevel() + 1,logica.getHighscore(), cadenaVidas, logica.getPuntos());
+        String msg = String.format("NIVEL:%d/3   HIGHSCORE:%05d%50.10s/%05d", logica.getLevel() + 1,logica.getHighscore(), cadenaVidas, logica.getPuntos());
 
         // la sombra, en gris
         g.setFont(font);       
