@@ -17,7 +17,7 @@ import logic.GameLogic;
 public class Marcador implements Dibujable {
 
     GameLogic logica;
-    private static final int X = 400;
+    private static final int X = 20;
     private static final int Y = 50;
     private Font font;
 
@@ -40,7 +40,7 @@ public class Marcador implements Dibujable {
         for (int i = 0; i < logica.getVidas(); i++) {
             cadenaVidas += "#";
         }
-        String msg = String.format("%3s/%05d", cadenaVidas, logica.getPuntos());
+        String msg = String.format("NIVEL:%d/6   HIGHSCORE:%05d%50.10s/%05d", logica.getLevel() + 1,logica.getHighscore(), cadenaVidas, logica.getPuntos());
 
         // la sombra, en gris
         g.setFont(font);       
