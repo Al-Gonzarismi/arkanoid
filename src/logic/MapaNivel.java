@@ -15,7 +15,7 @@ public class MapaNivel {
     // o = orange, h = ladrillo duro
     public static final String[][] mapa = {
         //Nivel 1
-        {
+        /*{
             "cccccccc",
             "cccccccc",
             "cc      ",
@@ -55,7 +55,7 @@ public class MapaNivel {
             "ggyhmygg",
             "gyymhyyg",
             "yyyhmyyy"
-        },
+        },*/
         // Nivel 4
         {
             "        ",
